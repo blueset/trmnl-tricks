@@ -367,6 +367,12 @@ For basic text, such as a URL, simply put it in the element text. For other form
 
 - For Apple Shortcuts, provide its name in `data-apple-shortcut`
 
+- Other parameters:
+  - `data-correction`: Data correction level. `"L"` for low (default), `"M"` for medium, `"Q"` for quad, `"H"` for high. Larger value means larger QR code size
+  - `data-color-dark`: Hex color for dark cells, default `"#000000"`
+  - `data-color-light`: Hex color for light cells, default `"#ffffff"`
+  - `data-scale`: On screen dimension for a cell, default: `"4"` (4px × 4px for one cell).
+
 For example:
 
 ```html
