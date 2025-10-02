@@ -54,11 +54,11 @@ Array.from(document.querySelectorAll('qr')).forEach(element => {
             text,
             correctLevel,
             colorDark: $('qr-color-dark') || '#000000',
-            colorLight: $('qr-color-dark') || '#ffffff',
+            colorLight: $('qr-color-light') || '#ffffff',
         });
     }
 
-    const pixels_per_cell = 4;
+    const pixels_per_cell = $('qr-scale') ? parseInt($('qr-scale')) : 4;
     const modules = qr._oQRCode.getModuleCount();
     let size = modules * pixels_per_cell
 

@@ -338,7 +338,7 @@ To display a QR code, insert a `<qr></qr>` element, and then add a handful of co
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-<script src="https://cdn.jsdelivr.net/gh/yunruse/trmnl-tricks/QR.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/blueset/trmnl-tricks@fork/QR.js" defer></script>
 <style>
   qr img {
     border: 10px solid white;
