@@ -1,10 +1,9 @@
 
 // Adapted from this recipe: https://usetrmnl.com/recipes/14428/install
 
-Array.from(document.querySelectorAll('data-qr')).forEach(element => {
+[...document.querySelectorAll('[data-qr]')].forEach(element => {
     const $ = t => element.dataset[t];
-
-    let mode = $('qr-mode')
+    let mode = $('mode')
     if (!mode) {
         if ($('emailAddress')) mode = 'email';
         if ($('telephone')) mode = 'tel';
@@ -60,9 +59,15 @@ Array.from(document.querySelectorAll('data-qr')).forEach(element => {
     const pixels_per_cell = $('scale') ? parseInt($('scale')) : 4;
     const modules = qr._oQRCode.getModuleCount();
     let size = modules * pixels_per_cell;
-    qr._htOption.width = size;
-    qr._htOption.height = size;
-    qr.makeCode(text);
+    element.innerText = "";
+    qr = new QRCode(element, {
+      text,
+      correctLevel,
+      width: size * 24,
+      height: size * 24,
+      colorDark: $('colorDark') || '#000000',
+      colorLight: $('colorLight') || '#ffffff',
+    });
 
     let img = element.querySelector('img');
     img.style.width = `${size}px`;
