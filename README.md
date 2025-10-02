@@ -334,7 +334,7 @@ By default, `clamp--2` (etc) will clamp on the letter, not the word. If you're o
 ![qr](https://github.com/user-attachments/assets/83f4143b-2b9c-4b48-8a36-83118b581aca)
 
 
-To display a QR code, insert a `<qr></qr>` element, and then add a handful of code at the _bottom_ of your page:
+To display a QR code, insert a `<div data-qr></div>` element, and then add a handful of code at the _bottom_ of your page:
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
