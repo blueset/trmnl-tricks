@@ -1,40 +1,39 @@
 
 // Adapted from this recipe: https://usetrmnl.com/recipes/14428/install
 
-Array.from(document.querySelectorAll('qr')).forEach(element => {
-    const $ = t => element.getAttribute(`qr-${t}`);
+Array.from(document.querySelectorAll('data-qr')).forEach(element => {
+    const $ = t => element.dataset[t];
 
     let mode = $('qr-mode')
     if (!mode) {
-        if ($('email-address')) mode = 'email';
+        if ($('emailAddress')) mode = 'email';
         if ($('telephone')) mode = 'tel';
-        if ($('sms-number')) mode = 'sms';
-        if ($('wifi-ssid')) mode = 'wifi';
-        if ($('apple-shortcut')) mode = 'apple-shortcut';
+        if ($('smsNumber')) mode = 'sms';
+        if ($('wifiSsid')) mode = 'wifi';
+        if ($('appleShortcut')) mode = 'apple-shortcut';
     }
-
 
     let text;
     switch (mode) {
         case 'email':
-            text = `mailto:${$('email-address')}`;
+            text = `mailto:${$('emailAddress')}`;
             break;
         case 'tel':
             text = `tel:${$('telephone')}`;
             break;
         case 'sms':
-            let sM = $('sms-message');
-            text = `sms:${$('sms-number')}${sM ? ('?body=' + encodeURI(sM)) : ''}`
+            let sM = $('smsMessage');
+            text = `sms:${$('smsNumber')}${sM ? ('?body=' + encodeURI(sM)) : ''}`
             break;
         case 'wifi':
-            text = `WIFI:S:${$('wifi-ssid')};`
-                + `T:${$('wifi-encryption') || 'WPA'};`
-                + `P:${$('wifi-password')};`
-                + ($('wifi-hidden') ? 'H:true;' : '')
+            text = `WIFI:S:${$('wifiSsid')};`
+                + `T:${$('wifiEncryption') || 'WPA'};`
+                + `P:${$('wifiPassword')};`
+                + ($('wifiHidden') ? 'H:true;' : '')
                 + `;`
             break;
         case 'apple-shortcut':
-            text = `shortcuts://run-shortcut?name=${$('apple-shortcut')}`;
+            text = `shortcuts://run-shortcut?name=${$('appleShortcut')}`;
             break;
         // TODO: `geo`
         default:
@@ -53,14 +52,17 @@ Array.from(document.querySelectorAll('qr')).forEach(element => {
         qr = new QRCode(element, {
             text,
             correctLevel,
-            colorDark: $('qr-color-dark') || '#000000',
-            colorLight: $('qr-color-light') || '#ffffff',
+            colorDark: $('colorDark') || '#000000',
+            colorLight: $('colorLight') || '#ffffff',
         });
     }
 
-    const pixels_per_cell = $('qr-scale') ? parseInt($('qr-scale')) : 4;
+    const pixels_per_cell = $('scale') ? parseInt($('scale')) : 4;
     const modules = qr._oQRCode.getModuleCount();
-    let size = modules * pixels_per_cell
+    let size = modules * pixels_per_cell;
+    qr._htOption.width = size;
+    qr._htOption.height = size;
+    qr.makeCode(text);
 
     let img = element.querySelector('img');
     img.style.width = `${size}px`;

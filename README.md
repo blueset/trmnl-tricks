@@ -340,11 +340,11 @@ To display a QR code, insert a `<qr></qr>` element, and then add a handful of co
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 <script src="https://cdn.jsdelivr.net/gh/blueset/trmnl-tricks@fork/QR.js" defer></script>
 <style>
-  qr img {
+  [data-qr] img {
     border: 10px solid white;
     display: inline;
   }
-  qr img {
+  [data-qr] img {
     display: inline !important;
   }
 </style>
@@ -357,27 +357,27 @@ To display a QR code, insert a `<qr></qr>` element, and then add a handful of co
 
 For basic text, such as a URL, simply put it in the element text. For other formats, you may use these attributes instead:
 
-- For email, provide a `qr-email-address`.
-- For telephone, provide a `qr-telephone`.
+- For email, provide a `data-email-address`.
+- For telephone, provide a `data-telephone`.
 
-- For SMS, provide a `qr-sms-number`; optionally you may add a `qr-sms-message`.
-- For Wi-Fi logins, provide a `qr-wifi-ssid` and `qr-wifi-password`.
+- For SMS, provide a `data-sms-number`; optionally you may add a `data-sms-message`.
+- For Wi-Fi logins, provide a `data-wifi-ssid` and `data-wifi-password`.
   
-  You may also, optionally, specify `qr-wifi-encryption` (by default, WPA is used) or a bare `qr-wifi-hidden` for a hidden network.
+  You may also, optionally, specify `data-wifi-encryption` (by default, WPA is used) or a bare `data-wifi-hidden` for a hidden network.
 
-- For Apple Shortcuts, provide its name in `qr-apple-shortcut`
+- For Apple Shortcuts, provide its name in `data-apple-shortcut`
 
 For example:
 
 ```html
-<qr>HTTPS://TINYURL.COM/TRMNL-QR-EXAMPLE</qr>
-<qr qr-apple-shortcut="Toggle Orthanc Doors"></qr>
-<qr qr-telephone="+1310-807-3956"></qr>
-<qr qr-sms-number="+1310-807-3956"
-  qr-sms-message="can you open up the door"
-  ></qr>
-<qr qr-wifi-ssid="Moria"
-  qr-wifi-password="mellon"
-  ></qr>
-<qr qr-email-address="gwaihir@eagles.manwe.vlr"></qr>
+<div data-qr>HTTPS://TINYURL.COM/TRMNL-QR-EXAMPLE</div>
+<div daa-qr data-apple-shortcut="Toggle Orthanc Doors"></div>
+<div daa-qr data-telephone="+1310-807-3956"></div>
+<div daa-qr data-sms-number="+1310-807-3956"
+  data-sms-message="can you open up the door"
+  ></div>
+<div daa-qr data-wifi-ssid="Moria"
+  data-wifi-password="mellon"
+  ></div>
+<div daa-qr data-email-address="gwaihir@eagles.manwe.vlr"></div>
 ```
