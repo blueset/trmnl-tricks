@@ -18,6 +18,11 @@ Any and all feedback, suggestions or errors - please [open an issue](https://git
 
 ## Table of contents
 
+- [TRMNL Framework](#trmnl-framework)
+  - [Internationalization](#internationalization)
+  - [QR codes](#qr-codes)
+  - [Rotated `.item` indexes](#rotated-item-indexes)
+  - [Clamp on the word, not the letter](#clamp-on-the-word-not-the-letter)
 - [Plugin metadata](#plugin-metadata)
   - [FYI: Developer Edition is per device!](#fyi-developer-edition-is-per-device)
   - [Installing vs Forking](#installing-vs-forking)
@@ -31,10 +36,137 @@ Any and all feedback, suggestions or errors - please [open an issue](https://git
   - [Sending variables to JavaScript](#sending-variables-to-javascript)
   - [A whistlestop tour of Liquid filters and operators](#a-whistlestop-tour-of-liquid-filters-and-operators)
   - [Widget height and width](#widget-height-and-width)
-- [TRMNL Framework](#trmnl-framework)
-  - [Rotated `.item` indexes](#rotated-item-indexes)
-  - [Clamp on the word, not the letter](#clamp-on-the-word-not-the-letter)
-  - [QR codes](#qr-codes)
+
+
+## TRMNL Framework
+
+The [Framework design system](https://usetrmnl.com/framework) is wonderful. Here are a bunch of snippets and extensions that might help with certain things.
+
+### Internationalization
+
+To translate strings of your plugin, see the following example. Translations can be submitted to [trmnl-i18n/custom_plugins](https://github.com/usetrmnl/trmnl-i18n/blob/main/lib/trmnl/i18n/locales/custom_plugins/en.yml). Message format follows [Unicode MessageFormat2 (MF2) syntax](https://messageformat.unicode.org/).
+
+```html
+<div lang="{{ trmnl.user.locale }}" data-t-data="{{ 'myPlugin' | l_word: trmnl.user.locale | json | escape }}">
+  <span data-t="example" data-t-my-timestamp="{{ trmnl.system.timestamp_utc | times: 1000 }}">
+    This is a format date: {$myTimestamp :datetime style=long}
+  </span>
+</div>
+
+<script type="module">
+  import { applyPlaintext } from 'https://cdn.jsdelivr.net/gh/blueset/trmnl-tricks@fork/i18n.js';
+  applyPlaintext();
+</script>
+```
+
+This renders the text inside the `data-t` element according to the user's locale. The `data-t-my-timestamp` attribute provides a variable to be used in the translation string. In this case, it formats a timestamp into a long date format.
+
+```html
+<div lang="en" data-t-data="{}">
+  <span data-t="example" data-t-timestamp="1763278663000">
+    This is a format date: Nov 15, 2025, 11:37 PM
+  </span>
+</div>
+```
+
+If your `custom_plugins` YAML file contains:
+
+```yml
+fr:
+  myPlugin:
+    example: "Ceci est une date formatée : {$myTimestamp :datetime style=long}"
+```
+
+then a user with the French locale would see:
+
+```html
+<div lang="fr" data-t-data="{&quot;myPlugin&quot;:{&quot;example&quot;:&quot;Ceci est une date formatée : {$myTimestamp :datetime style=long}&quot;}}">
+  <span data-t="example" data-t-timestamp="1763278663000">
+    Ceci est une date formatée : 15 novembre 2025 à 23:37
+  </span>
+</div>
+```
+
+### QR Codes
+
+![qr](https://github.com/user-attachments/assets/83f4143b-2b9c-4b48-8a36-83118b581aca)
+
+To display a QR code, insert a `<div data-qr></div>` element, and then add a handful of code at the _bottom_ of your page:
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/blueset/trmnl-tricks@fork/QR.js" defer></script>
+<style>
+  [data-qr] img {
+    border: 10px solid white;
+    display: inline;
+  }
+  [data-qr] img {
+    display: inline !important;
+  }
+</style>
+```
+
+#### QR Contents
+
+> [!TIP]
+> **If your QR code is in all-caps it takes up less space.** If you're super low on space, try a URL shortener in all-caps.
+
+For basic text, such as a URL, simply put it in the element text. For other formats, you may use these attributes instead:
+
+- For email, provide a `data-email-address`.
+- For telephone, provide a `data-telephone`.
+
+- For SMS, provide a `data-sms-number`; optionally you may add a `data-sms-message`.
+- For Wi-Fi logins, provide a `data-wifi-ssid` and `data-wifi-password`.
+  
+  You may also, optionally, specify `data-wifi-encryption` (by default, WPA is used) or a bare `data-wifi-hidden` for a hidden network.
+
+- For Apple Shortcuts, provide its name in `data-apple-shortcut`
+
+- Other parameters:
+  - `data-correction`: Data correction level. `"L"` for low (default), `"M"` for medium, `"Q"` for quad, `"H"` for high. Larger value means larger QR code size
+  - `data-color-dark`: Hex color for dark cells, default `"#000000"`
+  - `data-color-light`: Hex color for light cells, default `"#ffffff"`
+  - `data-scale`: On screen dimension for a cell, default: `"4"` (4px × 4px for one cell).
+
+For example:
+
+```html
+<div data-qr>HTTPS://TINYURL.COM/TRMNL-QR-EXAMPLE</div>
+<div daa-qr data-apple-shortcut="Toggle Orthanc Doors"></div>
+<div daa-qr data-telephone="+1310-807-3956"></div>
+<div daa-qr data-sms-number="+1310-807-3956"
+  data-sms-message="can you open up the door"
+  ></div>
+<div daa-qr data-wifi-ssid="Moria"
+  data-wifi-password="mellon"
+  ></div>
+<div daa-qr data-email-address="gwaihir@eagles.manwe.vlr"></div>
+```
+
+### Rotated `.item` indexes
+
+![image width=40](https://gist.github.com/user-attachments/assets/4e8eb4cc-2099-4279-ab09-ea8c9308c7a2)
+
+No need for `translate: transform` headaches! If you want rotated labels on an [`.item`](https://usetrmnl.com/framework/item), just use:
+
+```css
+.index {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+```
+
+### Clamp on the word, not the letter
+
+By default, `clamp--2` (etc) will clamp on the letter, not the word. If you're okay with a little less space, consider adding `clamp--nicely` and adding to a stylesheet:
+
+```css
+.clamp--nicely {
+  word-break: normal !important;
+}
+```
 
 ## Plugin metadata
 
@@ -300,90 +432,4 @@ If your plugin needs to know the height/width, use this:
 <!-- Quadrant -->
 {% assign width=400 %}
 {% assign height=235 %}
-```
-
-## TRMNL Framework
-
-The [Framework design system](https://usetrmnl.com/framework) is wonderful. Here are a bunch of snippets and extensions that might help with certain things.
-
-### Rotated `.item` indexes
-
-![image width=40](https://gist.github.com/user-attachments/assets/4e8eb4cc-2099-4279-ab09-ea8c9308c7a2)
-
-No need for `translate: transform` headaches! If you want rotated labels on an [`.item`](https://usetrmnl.com/framework/item), just use:
-
-```css
-.index {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-}
-```
-
-### Clamp on the word, not the letter
-
-By default, `clamp--2` (etc) will clamp on the letter, not the word. If you're okay with a little less space, consider adding `clamp--nicely` and adding to a stylesheet:
-
-```css
-.clamp--nicely {
-  word-break: normal !important;
-}
-```
-
-### QR Codes
-
-![qr](https://github.com/user-attachments/assets/83f4143b-2b9c-4b48-8a36-83118b581aca)
-
-
-To display a QR code, insert a `<div data-qr></div>` element, and then add a handful of code at the _bottom_ of your page:
-
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-<script src="https://cdn.jsdelivr.net/gh/blueset/trmnl-tricks@fork/QR.js" defer></script>
-<style>
-  [data-qr] img {
-    border: 10px solid white;
-    display: inline;
-  }
-  [data-qr] img {
-    display: inline !important;
-  }
-</style>
-```
-
-#### QR Contents
-
-> [!TIP]
-> **If your QR code is in all-caps it takes up less space.** If you're super low on space, try a URL shortener in all-caps.
-
-For basic text, such as a URL, simply put it in the element text. For other formats, you may use these attributes instead:
-
-- For email, provide a `data-email-address`.
-- For telephone, provide a `data-telephone`.
-
-- For SMS, provide a `data-sms-number`; optionally you may add a `data-sms-message`.
-- For Wi-Fi logins, provide a `data-wifi-ssid` and `data-wifi-password`.
-  
-  You may also, optionally, specify `data-wifi-encryption` (by default, WPA is used) or a bare `data-wifi-hidden` for a hidden network.
-
-- For Apple Shortcuts, provide its name in `data-apple-shortcut`
-
-- Other parameters:
-  - `data-correction`: Data correction level. `"L"` for low (default), `"M"` for medium, `"Q"` for quad, `"H"` for high. Larger value means larger QR code size
-  - `data-color-dark`: Hex color for dark cells, default `"#000000"`
-  - `data-color-light`: Hex color for light cells, default `"#ffffff"`
-  - `data-scale`: On screen dimension for a cell, default: `"4"` (4px × 4px for one cell).
-
-For example:
-
-```html
-<div data-qr>HTTPS://TINYURL.COM/TRMNL-QR-EXAMPLE</div>
-<div daa-qr data-apple-shortcut="Toggle Orthanc Doors"></div>
-<div daa-qr data-telephone="+1310-807-3956"></div>
-<div daa-qr data-sms-number="+1310-807-3956"
-  data-sms-message="can you open up the door"
-  ></div>
-<div daa-qr data-wifi-ssid="Moria"
-  data-wifi-password="mellon"
-  ></div>
-<div daa-qr data-email-address="gwaihir@eagles.manwe.vlr"></div>
 ```
