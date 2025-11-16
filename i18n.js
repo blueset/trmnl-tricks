@@ -135,7 +135,7 @@ function populateParts(element, parts, markups) {
   }
 }
 
-export function applyPlaintext(functions = {}) {
+function applyPlaintext(functions = {}) {
   document.querySelectorAll("[data-t]").forEach((e) => {
     const id = e.dataset.t;
     const message = strings[id] || e.innerHTML;
@@ -146,7 +146,7 @@ export function applyPlaintext(functions = {}) {
   });
 }
 
-export function applyHTML(functions = {}, markups = {}) {
+function applyHTML(functions = {}, markups = {}) {
   document.querySelectorAll("[data-t]").forEach((e) => {
     const id = e.dataset.t;
     const message = strings[id] || e.innerHTML;
