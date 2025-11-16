@@ -2,8 +2,11 @@ import { MessageFormat } from "https://cdn.jsdelivr.net/npm/messageformat/+esm";
 import { DefaultFunctions, DraftFunctions } from "https://cdn.jsdelivr.net/npm/messageformat@4.0.0-13/lib/functions/+esm";
 
 const script = document.querySelector("script[data-t-script]");
-delete script.dataset.tScript;
-const root = script.closest(".view");
+try {
+  delete script.dataset.tScript;
+} catch {
+  // no-op
+}
 
 function transformDataset(dataset) {
   const params = {};
@@ -22,23 +25,25 @@ function transformDataset(dataset) {
   return params;
 }
 
-const locale = (() => {
+const getLocale = (() => {
   try {
+    const root = script.closest(".view");
     return root.querySelector("[data-t-data]").lang || "en";
   } catch (e) {
     console.error("error getting locale", e);
     return "en";
   }
-})();
+});
 
-const strings = (() => {
+const getStrings = (() => {
   try {
+    const root = script.closest(".view");
     return JSON.parse(root.querySelector("[data-t-data]").dataset.tData);
   } catch (e) {
     console.error("error getting translations", e);
     return {};
   }
-})();
+});
 
 function populateParts(element, parts, markups) {
   const stack = []; // Track open markup tags
@@ -136,6 +141,8 @@ function populateParts(element, parts, markups) {
 }
 
 function applyPlaintext(functions = {}) {
+  const strings = getStrings();
+  const locale = getLocale();
   document.querySelectorAll("[data-t]").forEach((e) => {
     const id = e.dataset.t;
     const message = strings[id] || e.innerHTML;
@@ -147,6 +154,8 @@ function applyPlaintext(functions = {}) {
 }
 
 function applyHTML(functions = {}, markups = {}) {
+  const strings = getStrings();
+  const locale = getLocale();
   document.querySelectorAll("[data-t]").forEach((e) => {
     const id = e.dataset.t;
     const message = strings[id] || e.innerHTML;
