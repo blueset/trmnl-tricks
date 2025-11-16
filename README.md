@@ -53,7 +53,7 @@ To translate strings of your plugin, see the following example. Translations can
   </span>
 </div>
 
-<script type="module">
+<script type="module" data-t-script>
   import { applyPlaintext } from 'https://cdn.jsdelivr.net/gh/blueset/trmnl-tricks@fork/i18n.js';
   applyPlaintext();
 </script>
