@@ -1,5 +1,5 @@
 import { MessageFormat } from "https://cdn.jsdelivr.net/npm/messageformat/+esm";
-import { DefaultFunctions, DraftFunctions } from "https://cdn.jsdelivr.net/npm/messageformat@4.0.0-13/lib/functions/+esm";
+import { DefaultFunctions, DraftFunctions } from "https://cdn.jsdelivr.net/npm/messageformat@4.0.0-8/lib/functions/+esm";
 
 const script = document.querySelector("script[data-t-script]");
 try {
@@ -153,6 +153,7 @@ function applyPlaintext(functions = {}) {
       e.innerText = mf.format(transformDataset(e.dataset));
     } catch (error) {
       console.error('Error formatting', e, error);
+      e.innerText = error;
     }
   });
 }
@@ -172,6 +173,7 @@ function applyHTML(functions = {}, markups = {}) {
       populateParts(e, parts, markups);
     } catch (error) {
       console.error('Error formatting', e, error);
+      e.innerText = error;
     }
   });
 }
