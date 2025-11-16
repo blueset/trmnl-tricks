@@ -144,12 +144,16 @@ function applyPlaintext(functions = {}) {
   const strings = getStrings();
   const locale = getLocale();
   document.querySelectorAll("[data-t]").forEach((e) => {
-    const id = e.dataset.t;
-    const message = strings[id] || e.innerHTML;
-    const mf = new MessageFormat(locale, message, {
-      functions: { ...DraftFunctions, ...functions },
-    });
-    e.innerText = mf.format(transformDataset(e.dataset));
+    try {
+      const id = e.dataset.t;
+      const message = strings[id] || e.innerHTML;
+      const mf = new MessageFormat(locale, message, {
+        functions: { ...DraftFunctions, ...functions },
+      });
+      e.innerText = mf.format(transformDataset(e.dataset));
+    } catch (error) {
+      console.error('Error formatting', e, error);
+    }
   });
 }
 
@@ -157,14 +161,18 @@ function applyHTML(functions = {}, markups = {}) {
   const strings = getStrings();
   const locale = getLocale();
   document.querySelectorAll("[data-t]").forEach((e) => {
-    const id = e.dataset.t;
-    const message = strings[id] || e.innerHTML;
-    const mf = new MessageFormat(locale, message, {
-      functions: { ...DraftFunctions, ...functions },
-    });
-    const parts = mf.formatToParts(transformDataset(e.dataset));
-    e.innerHTML = "";
-    populateParts(e, parts, markups);
+    try {
+      const id = e.dataset.t;
+      const message = strings[id] || e.innerHTML;
+      const mf = new MessageFormat(locale, message, {
+        functions: { ...DraftFunctions, ...functions },
+      });
+      const parts = mf.formatToParts(transformDataset(e.dataset));
+      e.innerHTML = "";
+      populateParts(e, parts, markups);
+    } catch (error) {
+      console.error('Error formatting', e, error);
+    }
   });
 }
 
