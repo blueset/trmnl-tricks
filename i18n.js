@@ -1,4 +1,4 @@
-import { MessageFormat } from "https://cdn.jsdelivr.net/npm/messageformat@4.0.0-8/+esm";
+import { MessageFormat } from "https://cdn.jsdelivr.net/npm/messageformat@4.0.0-13/+esm";
 import { DefaultFunctions, DraftFunctions } from "https://cdn.jsdelivr.net/npm/messageformat@4.0.0-13/lib/functions/+esm";
 
 const script = document.querySelector("script[data-t-script]");
