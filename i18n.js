@@ -1,5 +1,6 @@
 import { MessageFormat } from "https://cdn.jsdelivr.net/npm/messageformat/+esm";
-import { DraftFunctions } from "https://cdn.jsdelivr.net/npm/messageformat@4.0.0-13/lib/functions/+esm";
+import { DefaultFunctions, DraftFunctions } from "https://cdn.jsdelivr.net/npm/messageformat@4.0.0-13/lib/functions/+esm";
+
 const script = document.querySelector("script[data-t-script]");
 delete script.dataset.tScript;
 const root = script.closest(".view");
@@ -157,3 +158,10 @@ export function applyHTML(functions = {}, markups = {}) {
     populateParts(e, parts, markups);
   });
 }
+
+export { 
+  DefaultFunctions,
+  DraftFunctions,
+  applyPlaintext,
+  applyHTML,
+};
